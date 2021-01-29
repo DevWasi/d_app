@@ -1,5 +1,8 @@
 # The directory Mix will write compiled artifacts to.
-/_build/
+_build
+deps
+assets/node_modules
+.idea
 
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
@@ -21,6 +24,7 @@ erl_crash.dump
 
 # Ignore package tarball (built via "mix hex.build").
 d_app-*.tar
+d_app.iml
 
 # If NPM crashes, it generates a log, let's ignore it too.
 npm-debug.log
