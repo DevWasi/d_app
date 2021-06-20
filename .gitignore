@@ -2,13 +2,12 @@
 _build
 deps
 assets/node_modules
-.idea
-
+/.idea
 # If you run "mix test --cover", coverage assets end up here.
 /cover/
 
 # The directory Mix downloads your dependencies sources to.
-/deps/
+/deps
 
 # Where 3rd-party dependencies like ExDoc output generated docs.
 /doc/

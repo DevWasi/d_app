@@ -3,20 +3,22 @@ defmodule DApp.Schema.User do
   import Ecto.Changeset
 
   schema "users" do
+    field :first_name, :string
+    field :last_name, :string
+    field :dob, :date
+    field :email, :string
     field :password, :string
-    field :username, :string
 
-    has_many(:quizes, DApp.Schema.Quiz)
-
+    belongs_to(:role, DApp.Schema.UserRole, type: :string)
     timestamps()
   end
 
   @doc false
   def changeset(user, attrs \\ %{}) do
     user
-    |> cast(attrs, [:username, :password])
-    |> validate_required([:username, :password])
-    |> unique_constraint(:username)
+    |> cast(attrs, [:email, :password, :first_name, :last_name, :dob, :role_id])
+    |> validate_required([:email, :password])
+    |> unique_constraint(:email)
     |> put_password_hash()
   end
 

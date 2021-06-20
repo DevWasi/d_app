@@ -7,6 +7,6 @@ defmodule DApp.Auth.AuthErrorHandler do
   def auth_error(conn, {_type, _reason}, _opts) do
     conn
 #    |> put_flash(:error, "You are unauthorized to view this page. It could be due to inactivity. Please login to continue.")
-    |> redirect(to: "/login")
+    |> redirect(to: "/")
   end
 end

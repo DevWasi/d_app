@@ -5,8 +5,8 @@ defmodule DApp.Schema.Answer do
   schema "answers" do
     field :answer, :string
 
-    belongs_to(:quiz, DApp.Schema.Quiz)
     belongs_to(:question, DApp.Schema.Question)
+    belongs_to(:user, DApp.Schema.User)
 
     timestamps()
   end

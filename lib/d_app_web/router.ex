@@ -11,7 +11,9 @@ defmodule DAppWeb.Router do
   end
 
   pipeline :api do
+    plug CORSPlug, origin: "*"
     plug :accepts, ["json"]
+    plug DApp.Plugs.Context
   end
 
   pipeline :guardian do
@@ -22,26 +24,16 @@ defmodule DAppWeb.Router do
     plug Guardian.Plug.EnsureAuthenticated
   end
 
-  scope "/", DAppWeb do
-    pipe_through :browser
+  scope "/" do
+    pipe_through :api
 
-    live "/", PageLive, :index
-    post "/login", SessionController, :login
-    post "/signup", SessionController, :signup
-    live "/login", LoginLive.Form
-    live "/signup", SignUpLive.Form
+    forward("/graphql", Absinthe.Plug, schema: DApp.Schema)
 
-    pipe_through [:guardian, :ensure_auth]
-      live "/home", HomeLive.Index
-      live "/quizes", QuizLive.Quizes
-  end
-
-  if Mix.env() in [:dev, :test] do
-    import Phoenix.LiveDashboard.Router
-
-    scope "/" do
-      pipe_through :browser
-      live_dashboard "/dashboard", metrics: DAppWeb.Telemetry
+    if Mix.env() == :dev do
+      forward "/graphiql",
+              Absinthe.Plug.GraphiQL,
+              schema: DApp.Schema
+#              socket: DApp.UserSocket
     end
   end
 end

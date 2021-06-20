@@ -1,51 +1,71 @@
 defmodule DAppWeb.SessionController do
+  import Sage
   use DAppWeb, :controller
 
-  alias DApp.Auth.Guardian
+  alias DApp.Auth.Guardian, as: Guardian
   alias DApp.AuthHelper, as: Data
 
-  def login(conn, params) do
-    case authenticate(params["user"]) do
-
-      {:ok, user} ->
-        conn
-        |> Guardian.Plug.sign_in(user)
-        |> redirect(to: "/home")
-
-      {:error, reason} ->
-        redirect(conn, to: "/login")
-    end
+  def signup(_, params, _) do
+    new()
+    |> run(:email_taken, &is_email_taken/2, &abort/4)
+    |> run(:create_user, &create_user/2, &abort/4)
+    |> run(:updated_user, &put_token/2, &abort/4)
+    |> run(:assign_courses, &put_token/2, &abort/4)
+    |> transaction(DApp.Repo, params)
   end
 
-  def signup(conn, %{"user" => user} = params) do
-    case Data.get_user(user["username"]) do
-
-      {:ok, user} ->
-        conn
-        |> redirect(to: "/signup")
-
-      {:error, :user_does_not_exist} ->
-        Data.create_user(user)
-        conn
-        |> redirect(to: "/home")
-    end
+  def signin(_, params, _) do
+    new()
+    |> run(:authenticate, &authenticate/2, &abort/4)
+    |> run(:login_user, &put_token/2, &abort/4)
+    |> transaction(DApp.Repo, params)
   end
 
-  def logout(conn),
-      do: Guardian.Plug.sign_out(conn)
-
-  defp authenticate(%{"username" => username, "password" => password} = params) do
-    case Data.get_user(username) do
-
+  defp authenticate(_, %{input: %{email: email, password: password}} = params) do
+    case Data.get_user(email) do
       {:error, :user_does_not_exist} ->
-        {:error, "User Doesn't Exist"}
+        {:error, ["User Doesn't Exist"]}
 
       {:ok, user} ->
         if(Argon2.verify_pass(password, user.password)) do
           {:ok, user}
         else
-          {:error, "Invalid Password"}
+          {:error, ["Invalid Password"]}
         end
+
+        _ -> {:error, ["Authentication Failed!!"]}
     end
+  end
+
+  defp is_email_taken(_, %{input: %{email: email} = params}) do
+    case Data.get_user(email) do
+      {:ok, user} ->
+        {:error, ["User Already Exists"]}
+
+      {:error, _} ->
+        {:ok, :can_create}
+    end
+  end
+
+  defp create_user(%{email_taken: :can_create} = all, %{input: user} = params) do
+    Data.create_user(user)
+  end
+  defp create_user(all, _) do
+    IO.inspect(all)
+  end
+
+  defp put_token(%{create_user: user} = all, _) do
+    case Guardian.encode_and_sign(user) do
+      {:ok, jwt, _} -> {:ok, Map.merge(user, %{token: jwt})}
+    end
+  end
+  defp put_token(%{authenticate: user} = all, _) do
+    case Guardian.encode_and_sign(user) do
+      {:ok, jwt, _} -> {:ok, Map.merge(user, %{token: jwt})}
+    end
+  end
+
+  defp abort(_, _, _, _) do
+    :abort
   end
 end

@@ -7,12 +7,21 @@ defmodule DApp.AuthHelper do
 
   def create_user(params), do: Query.create_user(params)
 
-  def get_user(params), do: Query.get_user_by_username(params)
+  def get_user(params), do: Query.get_user_by_email(params)
+
+  def get_user_by_id(params), do: Query.get_user(params)
+
+  def get_students(), do: Query.get_students()
 
   def get_changeset(),
-      do: Schema.changeset(%Schema{})
+      do: Schema.changeset(%DApp.Schema.User{})
 
-  def delete(%{"id" => id} = params) do
+  def delete(params) do
     Query.delete_user(params)
   end
+  def get_update(user, params) do
+    Query.update_user(user, params)
+  end
+
+  def change_user(user ,params), do: Query.change_user(user, params)
 end

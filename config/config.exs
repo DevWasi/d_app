@@ -23,6 +23,16 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Swagger Configuration
+config :d_app, :phoenix_swagger,
+       swagger_files: %{
+         "priv/static/swagger.json" => [
+           # phoenix routes will be converted to swagger paths
+           router: DAppWeb.Router
+         ]
+       }
+
+# Guardian Configuration
 config :d_app, DApp.Auth.Guardian,
        issuer: "DApp",
        secret_key: "8xNJQr8TbnxDJlpy6ZPzOxQKsF45Qr/VFfw2UwLIZ/rAJkkL91mEma4q/KQQmJyt"
