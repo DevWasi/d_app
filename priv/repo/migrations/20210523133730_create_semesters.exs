@@ -5,7 +5,7 @@ defmodule DApp.Repo.Migrations.CreateSemesters do
     create table(:semesters) do
       add :semester, :string
 
-      add :program_id, references(:programs, column: :name, type: :varchar, on_delete: :delete_all)
+      add :program_id, references(:programs, type: :varchar, on_delete: :delete_all)
       timestamps()
     end
 

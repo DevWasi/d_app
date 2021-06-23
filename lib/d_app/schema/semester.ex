@@ -4,9 +4,8 @@ defmodule DApp.Schema.Semester do
 
   schema "semesters" do
     field :semester, :string
-    field :program_id, :string
 
-    belongs_to(:program, DApp.Schema.Program, define_field: false, foreign_key: :program_id)
+    belongs_to(:program, DApp.Schema.Program, foreign_key: :program_id)
     timestamps()
   end
 

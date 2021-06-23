@@ -14,7 +14,7 @@ defmodule DApp.Schema.Program do
   @doc "Program Default ChangeSet"
   def changeset(program, attrs) do
     program
-    |> cast(attrs, [:name, :duration])
+    |> cast(attrs, [:name, :duration, :id])
     |> validate_required([:name, :duration])
   end
 end
