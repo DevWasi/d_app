@@ -28,12 +28,11 @@ defmodule DAppWeb.Router do
     pipe_through :api
 
     forward("/graphql", Absinthe.Plug, schema: DApp.Schema)
-
     if Mix.env() == :dev do
       forward "/graphiql",
               Absinthe.Plug.GraphiQL,
               schema: DApp.Schema
-#              socket: DApp.UserSocket
+      #              socket: DApp.UserSocket
     end
   end
 end

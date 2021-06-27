@@ -13,7 +13,7 @@ defmodule DApp.Auth.Guardian do
   def resource_from_claims(%{"sub" => id} = claims) do
     case Users.get_user(id) do
       nil -> {:error, :resource_not_found}
-      user -> {:ok, user}
+      {:ok, user} -> {:ok, user}
     end
   end
 end

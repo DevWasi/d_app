@@ -2,13 +2,13 @@ defmodule DApp.Repo.Migrations.CreatePrograms do
   use Ecto.Migration
 
   def change do
-    create table(:programs, primary_key: false) do
-      add :id, :string, primary_key: true
+    create table(:programs) do
       add :name, :string
       add :duration, :string
 
       timestamps()
     end
 
+    create unique_index(:programs, [:name])
   end
 end

@@ -6,6 +6,10 @@ defmodule DAppWeb.UserController do
     {:ok, Data.get_students()}
   end
 
+  def get_users_list(_, _params, _) do
+    {:ok, Data.get_users_list()}
+  end
+
   def update_user(_, %{input: %{email: email} = params}, _) do
     {:ok, user} = case Data.get_user(email) do
       {:ok, user} -> {:ok, user}

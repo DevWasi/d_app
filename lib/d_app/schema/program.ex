@@ -4,7 +4,6 @@ defmodule DApp.Schema.Program do
 
   @primary_key false
   schema "programs" do
-    field :id, :string, primary_key: true
     field :name, :string
     field :duration, :string
 
@@ -14,7 +13,8 @@ defmodule DApp.Schema.Program do
   @doc "Program Default ChangeSet"
   def changeset(program, attrs) do
     program
-    |> cast(attrs, [:name, :duration, :id])
+    |> cast(attrs, [:name, :duration])
     |> validate_required([:name, :duration])
+    |> unique_constraint(:name)
   end
 end

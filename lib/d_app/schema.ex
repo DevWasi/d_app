@@ -13,9 +13,30 @@ defmodule DApp.Schema do
       # Resolver
       resolve(&DAppWeb.UserController.get_student_list/3)
     end
+
+    @desc "Get users list by inserted_at"
+    field :get_users_list, list_of(:user_type) do
+      # Resolver
+      middleware(Middleware.Authorize, :any)
+      resolve(&DAppWeb.UserController.get_users_list/3)
+    end
   end
 
   mutation do
+
+    @desc "Get User From Token"
+    field :get_user_from_jwt, :user_type do
+      # Resolver
+      arg(:input, non_null(:get_user_from_jwt_input_type))
+      resolve(
+        fn a, arg, b ->
+          case DAppWeb.SessionController.get_user_from_jwt(a, arg, b) do
+            {:ok, _last, %{extracted_user: user}} -> {:ok, user}
+            {:error, error} -> {:error, error}
+          end
+        end
+      )
+    end
 
     @desc "Create New User On SignUp"
     field :user_signup, :user_type do
@@ -48,6 +69,7 @@ defmodule DApp.Schema do
     @desc "Update User"
     field :user_update, :user_type do
       # Resolver
+      middleware(Middleware.Authorize, :any)
       arg(:input, non_null(:user_update_input_type))
       resolve(&DAppWeb.UserController.update_user/3)
     end
@@ -55,6 +77,7 @@ defmodule DApp.Schema do
     @desc "delete User"
     field :user_delete, :user_type do
       # Resolver
+      middleware(Middleware.Authorize, :any)
       arg(:input, non_null(:user_delete_input_type))
       resolve(&DAppWeb.UserController.delete_user/3)
     end

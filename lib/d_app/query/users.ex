@@ -26,6 +26,17 @@ defmodule DApp.Query.Users do
   end
 
   @doc """
+  Returns the list of users in descending order
+  """
+  def get_users_list do
+    query = from(u in User,
+      where: u.role_id in ["admin", "student", "teacher"],
+      order_by: [desc: u.inserted_at],
+    )
+    Repo.all(query)
+  end
+
+  @doc """
   Gets a single user by id
   """
   def get_user(id) do

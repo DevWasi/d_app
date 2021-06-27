@@ -25,8 +25,8 @@ defmodule DAppWeb.AdminController do
     |> transaction(DApp.Repo, params)
   end
 
-  defp authenticate_program(_, %{input: %{id: id}}) do
-    case Data.get_program(id) do
+  defp authenticate_program(_, %{input: %{name: name}}) do
+    case Data.get_program(name) do
       {:error, :program_does_not_exist} -> {:ok, :create_program}
       {:ok, _program} -> {:error, ["program already exist"]}
     end

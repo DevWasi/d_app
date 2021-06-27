@@ -7,7 +7,7 @@ defmodule DApp.Repo.Migrations.CreateCourses do
       add :name, :string
 
       add :semester_id, references(:semesters, on_delete: :delete_all)
-      add :program_id, references(:programs, type: :varchar, on_delete: :delete_all)
+      add :program_id, references(:programs, on_delete: :delete_all)
       timestamps()
     end
 

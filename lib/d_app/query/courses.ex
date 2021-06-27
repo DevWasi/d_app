@@ -37,8 +37,8 @@ defmodule DApp.Query.Courses do
 
   """
 
-  def get_program(id) do
-    query = from(p in Program, where: p.id == ^id)
+  def get_program(name) do
+    query = from(p in Program, where: p.name == ^name)
     case Repo.one(query) do
       nil ->
         {:error, :program_does_not_exist}

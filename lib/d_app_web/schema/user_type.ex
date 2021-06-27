@@ -40,4 +40,7 @@ defmodule DAppWeb.Schema.UserType do
   input_object :user_delete_input_type do
     field :id, non_null :integer
   end
+  input_object :get_user_from_jwt_input_type do
+    field :token, non_null :string
+  end
 end

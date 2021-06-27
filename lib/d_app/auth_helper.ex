@@ -13,6 +13,8 @@ defmodule DApp.AuthHelper do
 
   def get_students(), do: Query.get_students()
 
+  def get_users_list(), do: Query.get_users_list()
+
   def get_changeset(),
       do: Schema.changeset(%DApp.Schema.User{})
 
