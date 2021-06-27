@@ -20,6 +20,13 @@ defmodule DApp.Schema do
       middleware(Middleware.Authorize, :any)
       resolve(&DAppWeb.UserController.get_users_list/3)
     end
+
+    @desc "Get list of roles"
+    field :get_roles_list, list_of(:user_roles_type) do
+      # Resolver
+      middleware(Middleware.Authorize, :any)
+      resolve(&DAppWeb.UserController.get_roles_list/3)
+    end
   end
 
   mutation do

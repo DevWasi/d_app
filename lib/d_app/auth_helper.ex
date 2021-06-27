@@ -15,6 +15,8 @@ defmodule DApp.AuthHelper do
 
   def get_users_list(), do: Query.get_users_list()
 
+  def get_roles_list(), do: Query.list_user_roles()
+
   def get_changeset(),
       do: Schema.changeset(%DApp.Schema.User{})
 

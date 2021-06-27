@@ -94,12 +94,6 @@ end
 
   @doc """
   Returns the list of user_roles.
-
-  ## Examples
-
-      iex> list_user_roles()
-      [%UserRole{}, ...]
-
   """
   def list_user_roles do
     Repo.all(UserRole)
