@@ -18,7 +18,7 @@ defmodule DApp.Query.Courses do
       [%Program{}, ...]
 
   """
-  def list_programs do
+  def get_programs_list do
     Repo.all(Program)
   end
 

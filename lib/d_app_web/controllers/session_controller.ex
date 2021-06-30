@@ -5,12 +5,11 @@ defmodule DAppWeb.SessionController do
   alias DApp.Auth.Guardian, as: Guardian
   alias DApp.AuthHelper, as: Data
 
-  def signup(_, params, _) do
+  def create_user(_, params, _) do
     new()
     |> run(:email_taken, &is_email_taken/2, &abort/4)
     |> run(:create_user, &create_user/2, &abort/4)
     |> run(:updated_user, &put_token/2, &abort/4)
-    |> run(:assign_courses, &put_token/2, &abort/4)
     |> transaction(DApp.Repo, params)
   end
 

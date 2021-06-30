@@ -6,6 +6,10 @@ defmodule DAppWeb.AdminController do
   @doc """
       Program Controller Functions
   """
+  def get_programs_list(_, _params, _) do
+    {:ok, Data.get_programs_list()}
+  end
+
   def create_program(_, params, _) do
     new()
     |> run(:authenticate, &authenticate_program/2, &abort/4)

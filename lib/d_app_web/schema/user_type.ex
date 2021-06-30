@@ -22,7 +22,7 @@ defmodule DAppWeb.Schema.UserType do
     field :email, :string
     field :password, :string
   end
-  input_object :user_signup_input_type do
+  input_object :user_create_input_type do
     field :first_name, :string
     field :last_name, :string
     field :dob, :date

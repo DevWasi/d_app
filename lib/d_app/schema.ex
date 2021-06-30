@@ -27,6 +27,13 @@ defmodule DApp.Schema do
       middleware(Middleware.Authorize, :any)
       resolve(&DAppWeb.UserController.get_roles_list/3)
     end
+
+    @desc "Get list of programs"
+    field :get_programs_list, list_of(:program_type) do
+      # Resolver
+      middleware(Middleware.Authorize, :any)
+      resolve(&DAppWeb.AdminController.get_programs_list/3)
+    end
   end
 
   mutation do
@@ -45,13 +52,14 @@ defmodule DApp.Schema do
       )
     end
 
-    @desc "Create New User On SignUp"
-    field :user_signup, :user_type do
+    @desc "Create New User"
+    field :create_user, :user_type do
       # Resolver
-      arg(:input, non_null(:user_signup_input_type))
+      middleware(Middleware.Authorize, :any)
+      arg(:input, non_null(:user_create_input_type))
       resolve(
         fn a, arg, b ->
-          case DAppWeb.SessionController.signup(a, arg, b) do
+          case DAppWeb.SessionController.create_user(a, arg, b) do
             {:ok, _last, %{create_user: user}} -> {:ok, user}
             {:error, error} -> {:error, error}
           end

@@ -10,7 +10,7 @@ defmodule DApp.Schema.Program do
     timestamps()
   end
 
-  @doc "Program Default ChangeSet"
+  @doc "Program Default   ChangeSet"
   def changeset(program, attrs) do
     program
     |> cast(attrs, [:name, :duration])

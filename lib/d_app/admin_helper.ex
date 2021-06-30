@@ -9,6 +9,7 @@ defmodule DApp.AdminHelper do
   """
 
   def get_program(params), do: Query.get_program(params)
+  def get_programs_list(), do: Query.get_programs_list()
   def create_program(params), do: Query.create_program(params)
 
   def delete_program(%{id: id}) do
