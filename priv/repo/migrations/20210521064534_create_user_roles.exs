@@ -8,5 +8,6 @@ defmodule DApp.Repo.Migrations.CreateUserRoles do
       timestamps()
     end
 
+  create unique_index(:user_roles, [:id])
   end
 end

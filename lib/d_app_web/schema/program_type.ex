@@ -4,18 +4,17 @@ defmodule DAppWeb.Schema.ProgramType do
 
   #---------------------Program Object------------------------
   object :program_type do
-    field :name, :string
+    field :id, :string
     field :duration, :string
   end
 
   #---------------------These Are Program Input Types------------------------
   input_object :create_program_input_type do
-    field :name, :string
+    field :id, :string
     field :duration, :string
   end
   input_object :update_program_input_type do
     field :id, :string
-    field :name, :string
     field :duration, :string
   end
   input_object :delete_program_input_type do
