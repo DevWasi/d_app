@@ -2,10 +2,11 @@ defmodule DApp.Schema.Semester do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @primary_key false
   schema "semesters" do
-    field :semester, :string
+    field :id, :string, primary_key: true
 
-    belongs_to(:program, DApp.Schema.Program, foreign_key: :program_id)
+    belongs_to(:program, DApp.Schema.Program, type: :string)
     timestamps()
   end
 
@@ -14,7 +15,7 @@ defmodule DApp.Schema.Semester do
   """
   def changeset(semester, attrs) do
     semester
-    |> cast(attrs, [:program_id, :semester])
-    |> validate_required([:program_id, :semester])
+    |> cast(attrs, [:program_id, :id])
+    |> validate_required([:program_id, :id])
   end
 end

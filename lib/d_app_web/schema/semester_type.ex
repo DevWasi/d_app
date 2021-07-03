@@ -5,21 +5,21 @@ defmodule DAppWeb.Schema.SemesterType do
 
   #---------------------Semester Object------------------------
   object :semester_type do
-    field :semester, :string
+    field :id, :string
     field(:program, :program_type, resolve: assoc(:program))
   end
 
   #---------------------These Are Semester Input Types------------------------
   input_object :create_semester_input_type do
-    field :semester, :string
+    field :id, :string
     field :program_name, :string
   end
   input_object :update_semester_input_type do
-    field :id, :integer
-    field :semester, :string
+    field :id, :string
     field :program_name, :string
   end
   input_object :delete_semester_input_type do
-    field :id, :integer
+    field :id, :string
+    field :program_name, :string
   end
 end

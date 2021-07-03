@@ -19,7 +19,8 @@ defmodule DApp.Query.Courses do
 
   """
   def get_programs_list do
-    Repo.all(Program)
+    query = from(p in Program, order_by: [desc: p.inserted_at])
+    Repo.all(query)
   end
 
   @doc """
@@ -37,8 +38,8 @@ defmodule DApp.Query.Courses do
 
   """
 
-  def get_program(name) do
-    query = from(p in Program, where: p.name == ^name)
+  def get_program(id) do
+    query = from(p in Program, where: p.id == ^id)
     case Repo.one(query) do
       nil ->
         {:error, :program_does_not_exist}
@@ -87,6 +88,9 @@ defmodule DApp.Query.Courses do
          changeset ->
            {:error, changeset}
        end
+  end
+  def update_program({:error, :program_does_not_exist}, _) do
+    {:error, ["Program Doesn't Exist"]}
   end
 
   @doc """
@@ -151,19 +155,15 @@ defmodule DApp.Query.Courses do
       ** (Ecto.NoResultsError)
 
   """
-  def get_semester(id) do
-    query = from(s in Semester, where: s.id == ^id, preload: [:program])
-#    IO.inspect("=======================START=====================")
-#    IO.inspect(Repo.one(query))
-#    IO.inspect("=======================END=======================")
+  def get_semester(semester_id, program_id) do
+    query = from(s in Semester,
+      where: s.id == ^semester_id,
+      where: s.program_id == ^program_id,
+      preload: [:program]
+    )
     case Repo.one(query) do
-      nil ->
-        {:error, :semester_does_not_exist}
-      semester ->
-        IO.inspect("=======================START=====================")
-        IO.inspect(semester)
-        IO.inspect("=======================END=======================")
-        {:ok, semester}
+      nil -> {:error, :semester_does_not_exist}
+      semester -> {:ok, semester}
     end
   end
 

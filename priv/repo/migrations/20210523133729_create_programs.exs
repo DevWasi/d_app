@@ -9,6 +9,6 @@ defmodule DApp.Repo.Migrations.CreatePrograms do
       timestamps()
     end
 
-    create unique_index(:programs, [:id])
+    create index(:programs, [:id])
   end
 end

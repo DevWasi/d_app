@@ -28,19 +28,19 @@ defmodule DApp.AdminHelper do
   Semester Helper Functions
   """
 
-  def get_semester(params), do: Query.get_semester(params)
+  def get_semester(id, program_id), do: Query.get_semester(id, program_id)
   def create_semester(params), do: Query.create_semester(params)
 
-  def delete_semester(%{id: id}) do
+  def delete_semester(%{id: id, program_name: program_id}) do
     id
-    |> Query.get_semester()
+    |> Query.get_semester(program_id)
     |> Query.delete_semester()
   end
 
-  def update_semester(%{id: id, name: name, program_name: program_id}) do
+  def update_semester(%{id: id, program_name: program_id}) do
     id
-    |> Query.get_semester()
-    |> Query.update_semester(%{name: name, program_id: program_id})
+    |> Query.get_semester(program_id)
+    |> Query.update_semester(%{id: id, program_id: program_id})
   end
 
   @doc """
