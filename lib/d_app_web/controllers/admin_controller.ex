@@ -57,6 +57,10 @@ defmodule DAppWeb.AdminController do
   @doc """
   Semester Controller Functions.
   """
+  def get_semesters_list(_, _params, _) do
+    {:ok, Data.get_semester_list()}
+  end
+
   def create_semester(_, params, _) do
     new()
     |> run(:authenticate, &authenticate_semester_create/2, &abort/4)
@@ -79,24 +83,24 @@ defmodule DAppWeb.AdminController do
   end
 
 
-  defp authenticate_semester_create(_, %{input: %{program_name: program_id, id: id}}) do
+  defp authenticate_semester_create(_, %{input: %{program_name: program_id, code: code}}) do
     with {:ok, _program} <- Data.get_program(program_id),
-         {:error, :semester_does_not_exist} <- Data.get_semester(id, program_id) do
+         {:error, :semester_does_not_exist} <- Data.get_semester(code, program_id) do
       {:ok, :can_create_semester}
     else
       {:error, :program_does_not_exist} -> {:error, ["This Program Doesn't Exist"]}
       {:ok, _semester} -> {:error, ["This semester already exist for this program"]}
     end
   end
-  defp create_semester(%{authenticate: :can_create_semester}, %{input: %{id: id, program_name: program_id}}) do
-    case Data.create_semester(%{id: id, program_id: program_id}) do
+  defp create_semester(%{authenticate: :can_create_semester}, %{input: %{code: code, program_name: program_id}}) do
+    case Data.create_semester(%{code: code, program_id: program_id}) do
       {:ok, semester} -> {:ok, semester}
       _ -> {:error, ["You Cannot Create Semester"]}
     end
   end
-  defp authenticate_semester_update(_, %{input: %{program_name: program_id, id: id}}) do
+  defp authenticate_semester_update(_, %{input: %{program_name: program_id, code: code}}) do
     with {:ok, _program} <- Data.get_program(program_id),
-         {:ok, _semester} <- Data.get_semester(id, program_id) do
+         {:ok, _semester} <- Data.get_semester(code, program_id) do
       {:ok, :can_update_semester}
     else
       {:error, :program_does_not_exist} -> {:error, ["This Program Doesn't Exist"]}
@@ -109,9 +113,9 @@ defmodule DAppWeb.AdminController do
       _ -> {:error, ["You Cannot Update Semester"]}
     end
   end
-  defp authenticate_semester_delete(_, %{input: %{program_name: program_id, id: id}}) do
+  defp authenticate_semester_delete(_, %{input: %{program_name: program_id, code: code}}) do
     with {:ok, _program} <- Data.get_program(program_id),
-         {:ok, _semester} <- Data.get_semester(id, program_id) do
+         {:ok, _semester} <- Data.get_semester(code, program_id) do
       {:ok, :can_delete_semester}
     else
       {:error, :program_does_not_exist} -> {:error, ["This Program Doesn't Exist"]}

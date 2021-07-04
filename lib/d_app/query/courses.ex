@@ -137,8 +137,12 @@ defmodule DApp.Query.Courses do
       [%Semester{}, ...]
 
   """
-  def list_semesters do
-    Repo.all(Semester)
+  def get_semester_list do
+    query = from(s in Semester,
+      group_by: s.id,
+      order_by: [desc: s.inserted_at]
+    )
+    Repo.all(query) |> IO.inspect()
   end
 
   @doc """
@@ -155,9 +159,9 @@ defmodule DApp.Query.Courses do
       ** (Ecto.NoResultsError)
 
   """
-  def get_semester(semester_id, program_id) do
+  def get_semester(code, program_id) do
     query = from(s in Semester,
-      where: s.id == ^semester_id,
+      where: s.code == ^code,
       where: s.program_id == ^program_id,
       preload: [:program]
     )

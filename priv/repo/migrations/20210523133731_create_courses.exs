@@ -7,10 +7,9 @@ defmodule DApp.Repo.Migrations.CreateCourses do
       add :name, :string
       add :credit_hours, :integer
 
-      add :semester_id, references(:semesters, on_delete: :delete_all, type: :varchar)
+      add :semester_id, references(:semesters, on_delete: :delete_all)
       timestamps()
     end
-
     create index(:courses, [:semester_id])
   end
 end

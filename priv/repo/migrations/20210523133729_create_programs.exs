@@ -8,7 +8,5 @@ defmodule DApp.Repo.Migrations.CreatePrograms do
 
       timestamps()
     end
-
-    create index(:programs, [:id])
   end
 end
