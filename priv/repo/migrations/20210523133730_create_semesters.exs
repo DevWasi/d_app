@@ -7,6 +7,6 @@ defmodule DApp.Repo.Migrations.CreateSemesters do
       add :program_id, references(:programs, on_delete: :delete_all, type: :varchar)
       timestamps()
     end
-    create unique_index(:semesters, [:program_id])
+    create index(:semesters, [:program_id])
   end
 end
