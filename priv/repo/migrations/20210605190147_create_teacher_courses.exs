@@ -4,7 +4,7 @@ defmodule DApp.Repo.Migrations.CreateTeacherCourses do
   def change do
     create table(:teacher_courses) do
 
-      add :course_id, references(:courses, type: :varchar)
+      add :course_id, references(:courses)
       add :user_id, references(:users)
 
 

@@ -152,15 +152,26 @@ defmodule DAppWeb.AdminController do
   end
 
 
-  defp authenticate_course(_, %{input: %{id: id}}) do
-    with {:ok, _program} <- Data.get_course(id) do
-      {:ok, :can_create_course}
+  defp authenticate_course(_, %{input: %{course_code: course_code, program_name: program_id, semester_code: semester_name}}) do
+    with {:ok, _program} <- Data.get_program(program_id),
+         {:ok, %{id: semester_id}} <- Data.get_semester(semester_name, program_id),
+         {:error, :course_does_not_exist} <- Data.get_course(course_code, semester_id, program_id) do
+      {:ok, %{status: :can_create_course, semester_id: semester_id}}
     else
       {:error, :program_does_not_exist} -> {:error, ["This Program Doesn't Exist"]}
+      {:error, :semester_does_not_exist} -> {:error, ["This semester Doesn't Exist for this program"]}
+      {:ok, _course} -> {:error, ["This Course Already Exist For This Semester"]}
+
     end
+
+    rescue
+    any ->
+      IO.inspect("=========RESCUE==============START=====================")
+      IO.inspect(any)
+      IO.inspect("=======================END=======================")
   end
-  defp create_course(%{authenticate: :can_create_course}, %{input: data}) do
-    case Data.create_course(data) do
+  defp create_course(%{authenticate: %{status: :can_create_course, semester_id: semester_id}}, %{input: data}) do
+    case Data.create_course(Map.merge(data, %{semester_code: semester_id})) do
       {:ok, course} -> {:ok, course}
       _ -> {:error, ["You Cannot Create course"]}
     end

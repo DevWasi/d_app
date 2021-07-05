@@ -32,7 +32,7 @@ defmodule DAppWeb.Router do
       forward "/graphiql",
               Absinthe.Plug.GraphiQL,
               schema: DApp.Schema
-      #              socket: DApp.UserSocket
+      #       socket: DApp.UserSocket
     end
   end
 end

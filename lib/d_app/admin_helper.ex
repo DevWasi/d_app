@@ -48,8 +48,9 @@ defmodule DApp.AdminHelper do
   Courses Helper Functions
   """
 
-  def get_course(params), do: Query.get_course(params)
-  def create_course(params), do: Query.create_course(params)
+  def get_course(course_code, semester_code, program_id), do: Query.get_course(course_code, semester_code, program_id)
+  def create_course(%{course_code: course_code, program_name: program_id, semester_code: semester_id, title: title, credit_hours: credit_hours}),
+      do: Query.create_course(%{course_code: course_code, program_id: program_id, semester_id: semester_id, title: title, credit_hours: credit_hours})
 
   def delete_course(%{id: id}) do
     id

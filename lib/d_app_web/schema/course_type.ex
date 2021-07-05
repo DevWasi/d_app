@@ -4,24 +4,31 @@ defmodule DAppWeb.Schema.CourseType do
 
   #---------------------Courses Object------------------------
   object :course_type do
-    field :id, :string
-    field :name, :string
-
+    field :course_code, :string
+    field :title, :string
+    field :credit_hours, :float
     field(:program, :program_type, resolve: assoc(:programs))
     field(:semester, :semester_type, resolve: assoc(:semesters))
   end
 
   #---------------------These Are Courses Input Types------------------------
   input_object :create_course_input_type do
-    field :name, :string
+    field :course_code, :string
+    field :title, :string
+    field :credit_hours, :float
     field :program_name, :string
+    field :semester_code, :string
   end
   input_object :update_course_input_type do
-    field :id, :integer
-    field :name, :string
+    field :course_code, :string
+    field :title, :string
+    field :credit_hours, :float
     field :program_name, :string
+    field :semester_code, :string
   end
   input_object :delete_course_input_type do
-    field :id, :integer
+    field :course_code, :string
+    field :program_name, :string
+    field :semester_code, :string
   end
 end

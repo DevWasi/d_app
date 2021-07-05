@@ -8,7 +8,7 @@ defmodule DApp.Repo.Migrations.CreateExamResults do
 
       add :exam_id, references(:exams)
       add :user_id, references(:users)
-      add :course_id, references(:courses, type: :varchar)
+      add :course_id, references(:courses)
       timestamps()
     end
 

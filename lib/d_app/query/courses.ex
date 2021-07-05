@@ -138,11 +138,10 @@ defmodule DApp.Query.Courses do
 
   """
   def get_semester_list do
-    query = from(s in Semester,
-      group_by: s.id,
-      order_by: [desc: s.inserted_at]
-    )
-    Repo.all(query) |> IO.inspect()
+    query = from(s in Semester, order_by: [s.program_id, s.code])
+    Repo.all(query)
+    |> Enum.chunk_by(& &1.program_id)
+    |> IO.inspect()
   end
 
   @doc """
@@ -248,6 +247,112 @@ defmodule DApp.Query.Courses do
     Semester.changeset(semester, attrs)
   end
 
+  alias DApp.Schema.Course
+
+  @doc """
+  Returns the list of courses.
+
+  ## Examples
+
+      iex> list_courses()
+      [%Course{}, ...]
+
+  """
+  def list_courses do
+    Repo.all(Course)
+  end
+
+  @doc """
+  Gets a single course.
+
+  Raises `Ecto.NoResultsError` if the course does not exist.
+
+  ## Examples
+
+      iex> get_course!(123)
+      %Course{}
+
+      iex> get_course!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_course(course_code, semester_id, program_id) do
+    query = from(c in Course,
+      where: c.course_code == ^course_code,
+      where: c.semester_id == ^semester_id,
+      where: c.program_id == ^program_id
+    )
+    case Repo.one(query) do
+      nil -> {:error, :course_does_not_exist}
+      course -> {:ok, course}
+    end
+  end
+
+  @doc """
+  Creates a course.
+
+  ## Examples
+
+      iex> create_course(%{field: value})
+      {:ok, %Course{}}
+
+      iex> create_course(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_course(attrs \\ %{}) do
+    %Course{}
+    |> Course.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a course.
+
+  ## Examples
+
+      iex> update_course(course, %{field: new_value})
+      {:ok, %Course{}}
+
+      iex> update_course(course, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_course(%Course{} = course, attrs) do
+    course
+    |> Course.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a course.
+
+  ## Examples
+
+      iex> delete_course(course)
+      {:ok, %Course{}}
+
+      iex> delete_course(course)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_course(%Course{} = course) do
+    Repo.delete(course)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking course changes.
+
+  ## Examples
+
+      iex> change_course(course)
+      %Ecto.Changeset{data: %Course{}}
+
+  """
+  def change_course(%Course{} = course, attrs \\ %{}) do
+    Course.changeset(course, attrs)
+  end
+
   alias DApp.Schema.TeacherCourse
 
   @doc """
@@ -259,7 +364,7 @@ defmodule DApp.Query.Courses do
       [%TeacherCourse{}, ...]
 
   """
-  def list_teacher_courses do
+  def list_courses do
     Repo.all(TeacherCourse)
   end
 
