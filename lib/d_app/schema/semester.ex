@@ -15,6 +15,5 @@ defmodule DApp.Schema.Semester do
     semester
     |> cast(attrs, [:program_id, :code])
     |> validate_required([:program_id, :code])
-    |> unique_constraint([:code])
   end
 end

@@ -84,7 +84,7 @@ defmodule DAppWeb.AdminController do
 
 
   defp authenticate_semester_create(_, %{input: %{program_name: program_id, code: code}}) do
-    with {:ok, _program} <- Data.get_program(program_id),
+    with {:ok, _prograxm} <- Data.get_program(program_id),
          {:error, :semester_does_not_exist} <- Data.get_semester(code, program_id) do
       {:ok, :can_create_semester}
     else
@@ -163,7 +163,6 @@ defmodule DAppWeb.AdminController do
       {:ok, _course} -> {:error, ["This Course Already Exist For This Semester"]}
 
     end
-
     rescue
     any ->
       IO.inspect("=========RESCUE==============START=====================")
