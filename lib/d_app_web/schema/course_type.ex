@@ -7,8 +7,8 @@ defmodule DAppWeb.Schema.CourseType do
     field :course_code, :string
     field :title, :string
     field :credit_hours, :float
-    field(:program, :program_type, resolve: assoc(:programs))
-    field(:semester, :semester_type, resolve: assoc(:semesters))
+    field(:program, :program_type, resolve: assoc(:program))
+    field(:semester, :semester_type, resolve: assoc(:semester))
   end
 
   #---------------------These Are Courses Input Types------------------------

@@ -41,6 +41,13 @@ defmodule DApp.Schema do
       middleware(Middleware.Authorize, :any)
       resolve(&DAppWeb.AdminController.get_semesters_list/3)
     end
+
+    @desc "Get list of semesters"
+    field :get_courses_list, list_of(list_of(:course_type)) do
+      # Resolver
+      middleware(Middleware.Authorize, :any)
+      resolve(&DAppWeb.AdminController.get_courses_list/3)
+    end
   end
   mutation do
 

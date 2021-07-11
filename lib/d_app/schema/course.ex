@@ -9,7 +9,7 @@ defmodule DApp.Schema.Course do
     field :credit_hours, :float
 
     belongs_to(:semester, DApp.Schema.Semester)
-    belongs_to(:program, DApp.Schema.Semester, type: :string)
+    belongs_to(:program, DApp.Schema.Program, type: :string)
 
     timestamps()
   end

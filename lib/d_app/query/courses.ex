@@ -141,7 +141,6 @@ defmodule DApp.Query.Courses do
     query = from(s in Semester, order_by: [s.program_id, s.code])
     Repo.all(query)
     |> Enum.chunk_by(& &1.program_id)
-    |> IO.inspect()
   end
 
   @doc """
@@ -258,8 +257,11 @@ defmodule DApp.Query.Courses do
       [%Course{}, ...]
 
   """
-  def list_courses do
-    Repo.all(Course)
+  def get_courses_list do
+    query = from(c in Course, order_by: [c.program_id, c.semester_id, c.course_code])
+    Repo.all(query)
+    |> Enum.chunk_by(& &1.program_id)
+    |> IO.inspect()
   end
 
   @doc """

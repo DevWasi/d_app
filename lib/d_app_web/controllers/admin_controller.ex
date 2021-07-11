@@ -132,6 +132,10 @@ defmodule DAppWeb.AdminController do
   @doc """
   Courses Controller Functions
   """
+  def get_courses_list(_, _params, _) do
+    {:ok, Data.get_courses_list()}
+  end
+
   def create_course(_, params, _) do
     new()
     |> run(:authenticate, &authenticate_course/2, &abort/4)
