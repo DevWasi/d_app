@@ -29,6 +29,7 @@ defmodule DApp.AdminHelper do
   """
 
   def get_semester(code, program_id), do: Query.get_semester(code, program_id)
+  def get_semesters_by_program(program_id), do: Query.get_semesters_by_program(program_id)
   def get_semester_list(), do: Query.get_semester_list()
   def create_semester(params), do: Query.create_semester(params)
 

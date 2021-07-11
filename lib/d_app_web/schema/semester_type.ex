@@ -10,6 +10,9 @@ defmodule DAppWeb.Schema.SemesterType do
   end
 
   #---------------------These Are Semester Input Types------------------------
+  input_object :get_semesters_by_program_input_type do
+    field :program_name, :string
+  end
   input_object :create_semester_input_type do
     field :code, :string
     field :program_name, :string

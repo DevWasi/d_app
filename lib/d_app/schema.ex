@@ -2,11 +2,10 @@ defmodule DApp.Schema do
   use Absinthe.Schema
   alias DApp.Schema.Middleware
 
-
-
   # Import Types
   import_types(DAppWeb.Schema.Types)
 
+#--------------------------QUERY SECTION--------------------------#
   query do
     @desc "Get a list of students"
     field :get_students, list_of(:user_type) do
@@ -42,15 +41,18 @@ defmodule DApp.Schema do
       resolve(&DAppWeb.AdminController.get_semesters_list/3)
     end
 
-    @desc "Get list of semesters"
+    @desc "Get list of courses"
     field :get_courses_list, list_of(list_of(:course_type)) do
       # Resolver
       middleware(Middleware.Authorize, :any)
       resolve(&DAppWeb.AdminController.get_courses_list/3)
     end
   end
+
+  #--------------------------MUTATION SECTION--------------------------#
   mutation do
 
+    #--------------------------USER API--------------------------#
     @desc "Get User From Token"
     field :get_user_from_jwt, :user_type do
       # Resolver
@@ -110,6 +112,8 @@ defmodule DApp.Schema do
       resolve(&DAppWeb.UserController.delete_user/3)
     end
 
+    #--------------------------PROGRAM API--------------------------#
+
     @desc "create program"
     field :create_program, :program_type do
       # Resolver
@@ -149,6 +153,23 @@ defmodule DApp.Schema do
         fn a, arg, b ->
           case DAppWeb.AdminController.delete_program(a, arg, b) do
             {:ok, _last, %{delete_program: program}} -> {:ok, program}
+            {:error, error} -> {:error, error}
+          end
+        end
+      )
+    end
+
+    #--------------------------SEMESTER API--------------------------#
+
+    @desc "Get Semesters By Program"
+    field :get_semesters_by_program, list_of(:semester_type) do
+      # Resolver
+      middleware(Middleware.Authorize, :any)
+      arg(:input, non_null(:get_semesters_by_program_input_type))
+      resolve(
+        fn a, arg, b ->
+          case DAppWeb.AdminController.get_semesters_by_program(a, arg, b) do
+            {:ok, _last, %{get_semesters_by_program: semesters}} -> {:ok, semesters}
             {:error, error} -> {:error, error}
           end
         end
@@ -199,6 +220,8 @@ defmodule DApp.Schema do
         end
       )
     end
+
+    #--------------------------COURSE API--------------------------#
 
     @desc "create course"
     field :create_course, :course_type do

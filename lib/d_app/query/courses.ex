@@ -145,17 +145,6 @@ defmodule DApp.Query.Courses do
 
   @doc """
   Gets a single semester.
-
-  Raises `Ecto.NoResultsError` if the Semester does not exist.
-
-  ## Examples
-
-      iex> get_semester!(123)
-      %Semester{}
-
-      iex> get_semester!(456)
-      ** (Ecto.NoResultsError)
-
   """
   def get_semester(code, program_id) do
     query = from(s in Semester,
@@ -166,6 +155,21 @@ defmodule DApp.Query.Courses do
     case Repo.one(query) do
       nil -> {:error, :semester_does_not_exist}
       semester -> {:ok, semester}
+    end
+  end
+
+  @doc """
+  Gets Semesters list by program.
+  """
+  def get_semesters_by_program(program_id) do
+    query = from(s in Semester,
+      order_by: [s.program_id, s.code],
+      where: s.program_id == ^program_id,
+      preload: [:program]
+    )
+    case Repo.all(query) do
+      nil -> {:error, :semesters_does_not_exist}
+      semesters -> {:ok, semesters}
     end
   end
 

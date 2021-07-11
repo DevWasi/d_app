@@ -57,6 +57,12 @@ defmodule DAppWeb.AdminController do
   @doc """
   Semester Controller Functions.
   """
+  def get_semesters_by_program(_, params, _) do
+    new()
+    |> run(:get_semesters_by_program, &get_semesters/2, &abort/4)
+    |> transaction(DApp.Repo, params)
+  end
+
   def get_semesters_list(_, _params, _) do
     {:ok, Data.get_semester_list()}
   end
@@ -126,6 +132,15 @@ defmodule DAppWeb.AdminController do
     case Data.delete_semester(data) do
       {:ok, semester} -> {:ok, semester}
       {:error, error} -> {:error, error}
+    end
+  end
+  defp get_semesters(_, %{input: %{program_name: program_id}}) do
+    with {:ok, _program} <- Data.get_program(program_id),
+         {:ok, semesters} <- Data.get_semesters_by_program(program_id) do
+      {:ok, semesters}
+    else
+      {:error, :program_does_not_exist} -> {:error, ["This Program Doesn't Exist"]}
+      {:error, :semesters_does_not_exist} -> {:error, ["Semesters Doesn't Exist For This Program"]}
     end
   end
 
