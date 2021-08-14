@@ -56,13 +56,34 @@ ALTER SEQUENCE public.answers_id_seq OWNED BY public.answers.id;
 --
 
 CREATE TABLE public.courses (
-    id character varying(255) NOT NULL,
-    name character varying(255),
-    credit_hours integer,
-    semester_id character varying,
+    id bigint NOT NULL,
+    course_code character varying(255),
+    title character varying(255),
+    credit_hours double precision,
+    semester_id bigint,
+    program_id character varying,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL
 );
+
+
+--
+-- Name: courses_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.courses_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: courses_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.courses_id_seq OWNED BY public.courses.id;
 
 
 --
@@ -74,7 +95,7 @@ CREATE TABLE public.exam_results (
     marks double precision,
     exam_id bigint,
     user_id bigint,
-    course_id character varying,
+    course_id bigint,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL
 );
@@ -168,11 +189,31 @@ CREATE TABLE public.schema_migrations (
 --
 
 CREATE TABLE public.semesters (
-    id character varying(255) NOT NULL,
+    id bigint NOT NULL,
+    code character varying(255),
     program_id character varying,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL
 );
+
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.semesters_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: semesters_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.semesters_id_seq OWNED BY public.semesters.id;
 
 
 --
@@ -181,7 +222,7 @@ CREATE TABLE public.semesters (
 
 CREATE TABLE public.student_courses (
     id bigint NOT NULL,
-    course_id character varying,
+    course_id bigint,
     user_id bigint,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL
@@ -213,7 +254,7 @@ ALTER SEQUENCE public.student_courses_id_seq OWNED BY public.student_courses.id;
 
 CREATE TABLE public.teacher_courses (
     id bigint NOT NULL,
-    course_id character varying,
+    course_id bigint,
     user_id bigint,
     inserted_at timestamp(0) without time zone NOT NULL,
     updated_at timestamp(0) without time zone NOT NULL
@@ -294,6 +335,13 @@ ALTER TABLE ONLY public.answers ALTER COLUMN id SET DEFAULT nextval('public.answ
 
 
 --
+-- Name: courses id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.courses ALTER COLUMN id SET DEFAULT nextval('public.courses_id_seq'::regclass);
+
+
+--
 -- Name: exam_results id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -305,6 +353,13 @@ ALTER TABLE ONLY public.exam_results ALTER COLUMN id SET DEFAULT nextval('public
 --
 
 ALTER TABLE ONLY public.exams ALTER COLUMN id SET DEFAULT nextval('public.exams_id_seq'::regclass);
+
+
+--
+-- Name: semesters id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.semesters ALTER COLUMN id SET DEFAULT nextval('public.semesters_id_seq'::regclass);
 
 
 --
@@ -425,10 +480,10 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: courses_semester_id_index; Type: INDEX; Schema: public; Owner: -
+-- Name: courses_semester_id_program_id_index; Type: INDEX; Schema: public; Owner: -
 --
 
-CREATE INDEX courses_semester_id_index ON public.courses USING btree (semester_id);
+CREATE INDEX courses_semester_id_program_id_index ON public.courses USING btree (semester_id, program_id);
 
 
 --
@@ -436,13 +491,6 @@ CREATE INDEX courses_semester_id_index ON public.courses USING btree (semester_i
 --
 
 CREATE INDEX exam_results_exam_id_user_id_course_id_index ON public.exam_results USING btree (exam_id, user_id, course_id);
-
-
---
--- Name: programs_id_index; Type: INDEX; Schema: public; Owner: -
---
-
-CREATE UNIQUE INDEX programs_id_index ON public.programs USING btree (id);
 
 
 --
@@ -485,6 +533,14 @@ CREATE UNIQUE INDEX users_email_role_id_index ON public.users USING btree (email
 --
 
 CREATE INDEX users_role_id_index ON public.users USING btree (role_id);
+
+
+--
+-- Name: courses courses_program_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.courses
+    ADD CONSTRAINT courses_program_id_fkey FOREIGN KEY (program_id) REFERENCES public.programs(id) ON DELETE CASCADE;
 
 
 --

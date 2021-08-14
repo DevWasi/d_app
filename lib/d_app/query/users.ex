@@ -48,7 +48,7 @@ defmodule DApp.Query.Users do
 
 
   @doc """
-  Gets a single user by username
+  Gets a single user by email
   """
   def get_user_by_email(email) do
     query = from(u in User, where: u.email == ^email)

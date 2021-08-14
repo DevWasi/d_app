@@ -8,7 +8,6 @@ defmodule DApp.Query.Courses do
 
   alias DApp.Schema.Program
   alias DApp.Schema.Semester
-
   @doc """
   Returns the list of programs.
 
@@ -18,9 +17,20 @@ defmodule DApp.Query.Courses do
       [%Program{}, ...]
 
   """
-  def get_programs_list do
-    query = from(p in Program, order_by: [desc: p.inserted_at])
-    Repo.all(query)
+#  def get_programs_list do
+#    query = from(p in Program, order_by: [desc: p.inserted_at])
+#    Repo.all(query)
+#  end
+
+  def get_program_list() do
+    EASY.Query.build(
+      DApp.Schema.Program,
+      %{
+        "$order" => %{
+          "inserted_at" => "$desc"
+        }
+      }
+    ) |> Repo.all
   end
 
   @doc """
@@ -38,8 +48,23 @@ defmodule DApp.Query.Courses do
 
   """
 
+#  def get_program(id) do
+#    query = from(p in Program, where: p.id == ^id)
+#    case Repo.one(query) do
+#      nil ->
+#        {:error, :program_does_not_exist}
+#      program ->
+#        {:ok, program}
+#    end
+#  end
+
   def get_program(id) do
-    query = from(p in Program, where: p.id == ^id)
+    query = EASY.Query.build(
+      DApp.Schema.Program,
+      %{
+        "$where" =>  %{"id" => id}
+      }
+    )
     case Repo.one(query) do
       nil ->
         {:error, :program_does_not_exist}
@@ -161,16 +186,30 @@ defmodule DApp.Query.Courses do
   @doc """
   Gets Semesters list by program.
   """
+#  def get_semesters_by_program(program_id) do
+#    query = from(s in Semester,
+#      order_by: [s.program_id, s.code],
+#      where: s.program_id == ^program_id,
+#      preload: [:program]
+#    )
+#    case Repo.all(query) do
+#      nil -> {:error, :semesters_does_not_exist}
+#      semesters -> {:ok, semesters}
+#    end
+#  end
+
   def get_semesters_by_program(program_id) do
-    query = from(s in Semester,
-      order_by: [s.program_id, s.code],
-      where: s.program_id == ^program_id,
-      preload: [:program]
-    )
-    case Repo.all(query) do
-      nil -> {:error, :semesters_does_not_exist}
-      semesters -> {:ok, semesters}
-    end
+     query = EASY.Query.build(
+      DApp.Schema.Semester,
+      %{
+        "$where" =>  %{"program_id" => program_id},
+        "$order" =>  ["program_id", "code"]
+      }
+     )
+     case Repo.all(query) do
+       nil -> {:error, :semesters_does_not_exist}
+       semesters -> {:ok, semesters}
+     end
   end
 
   @doc """
@@ -282,16 +321,34 @@ defmodule DApp.Query.Courses do
       ** (Ecto.NoResultsError)
 
   """
+#  def get_course(course_code, semester_id, program_id) do
+#    query = from(c in Course,
+#      where: c.course_code == ^course_code,
+#      where: c.semester_id == ^semester_id,
+#      where: c.program_id == ^program_id
+#    )
+#    case Repo.one(query) do
+#      nil -> {:error, :course_does_not_exist}
+#      course -> {:ok, course}
+#    end
+#  end
+
   def get_course(course_code, semester_id, program_id) do
-    query = from(c in Course,
-      where: c.course_code == ^course_code,
-      where: c.semester_id == ^semester_id,
-      where: c.program_id == ^program_id
+    query = EASY.Query.build(
+      DApp.Schema.Course,
+      %{
+        "$where" =>  %{
+          "course_code" => course_code,
+          "semester_id" => semester_id,
+          "program_id" => program_id
+        }
+      }
     )
+
     case Repo.one(query) do
-      nil -> {:error, :course_does_not_exist}
-      course -> {:ok, course}
-    end
+            nil -> {:error, :course_does_not_exist}
+            course -> {:ok, course}
+          end
   end
 
   @doc """
