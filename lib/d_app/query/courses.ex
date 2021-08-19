@@ -22,7 +22,7 @@ defmodule DApp.Query.Courses do
 #    Repo.all(query)
 #  end
 
-  def get_program_list() do
+  def get_programs_list do
     EASY.Query.build(
       DApp.Schema.Program,
       %{
