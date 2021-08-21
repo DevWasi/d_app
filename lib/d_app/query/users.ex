@@ -40,8 +40,9 @@ defmodule DApp.Query.Users do
   Gets a single user by id
   """
   def get_user(id) do
-    case Repo.get(User, id) do
-      nil -> {:error, "doesn't exist"}
+    query = from(u in User, where: u.id == ^id, preload: [:role])
+    case Repo.one(query) do
+      nil -> {:error, "user doesn't exist"}
       user -> {:ok, user}
     end
   end
@@ -53,10 +54,8 @@ defmodule DApp.Query.Users do
   def get_user_by_email(email) do
     query = from(u in User, where: u.email == ^email)
     case Repo.one(query) do
-      nil ->
-        {:error, :user_does_not_exist}
-      user ->
-        {:ok, user}
+      nil -> {:error, :user_does_not_exist}
+      user -> {:ok, user}
     end
 end
 

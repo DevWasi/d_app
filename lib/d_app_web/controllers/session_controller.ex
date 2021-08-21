@@ -20,14 +20,10 @@ defmodule DAppWeb.SessionController do
     |> transaction(DApp.Repo, params)
   end
 
-  def get_user_from_jwt(_, %{input: %{token: token}}, _) do
-    with {:ok, claims} <- Guardian.decode_and_verify(token),
-         {:ok, user} <- Guardian.resource_from_claims(claims) do
-      {:ok, user}
-    else
-      {:error, :resource_not_found} -> {:error, ["Invalid Token"]}
-      _ -> {:error, ["Token Is Invalid"]}
-    end
+  def get_user_from_jwt(_, params, _) do
+    new()
+    |> run(:extracted_user, &extract_user/2, &abort/4)
+    |> transaction(DApp.Repo, params)
   end
 
   defp authenticate(_, %{input: %{email: email, password: password}} = params) do
@@ -71,6 +67,15 @@ defmodule DAppWeb.SessionController do
   defp put_token(%{authenticate: user} = all, _) do
     case Guardian.encode_and_sign(user) do
       {:ok, jwt, _} -> {:ok, Map.merge(user, %{token: jwt})}
+    end
+  end
+
+  defp extract_user(_, %{input: %{token: token}}) do
+    with {:ok, claims} <- Guardian.decode_and_verify(token),
+         {:ok, user} <- Guardian.resource_from_claims(claims) do
+      {:ok, user}
+    else
+      {:error, error} -> {:error, error}
     end
   end
 
