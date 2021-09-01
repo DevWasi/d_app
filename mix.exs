@@ -47,16 +47,16 @@ defmodule DApp.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:guardian, "~> 2.0"},
-      {:argon2_elixir, "~> 2.0"},
-      {:phoenix_swagger, "~> 0.8"},
+      {:guardian, "~> 2.2"},
+      {:argon2_elixir, "~> 2.4"},
+      {:phoenix_swagger, "~> 0.8.3"},
       {:ex_json_schema, "~> 0.5"},
       {:cors_plug, "~> 2.0"},
       {:poison, "~> 3.0"},
       {:absinthe, "~> 1.4"},
       {:absinthe_plug, "~> 1.4.7"},
       {:absinthe_ecto, "~> 0.1.3"},
-      {:sage, "~> 0.4.0"}
+      {:sage, "~> 0.6.1"}
     ]
   end
 

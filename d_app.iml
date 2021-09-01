@@ -125,5 +125,7 @@
     <orderEntry type="library" name="dialyze" level="project" />
     <orderEntry type="library" name="sage" level="project" />
     <orderEntry type="library" name="cors_plug" level="project" />
+    <orderEntry type="library" name="myxql" level="project" />
+    <orderEntry type="library" name="tds" level="project" />
   </component>
 </module>

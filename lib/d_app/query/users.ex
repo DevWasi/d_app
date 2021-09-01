@@ -21,19 +21,17 @@ defmodule DApp.Query.Users do
   """
   def get_students do
     role = "user"
-    query = from(u in User, where: u.role_id == ^role)
-    Repo.all(query)
+    from(u in User, where: u.role_id == ^role) |> Repo.all()
   end
 
   @doc """
   Returns the list of users in descending order
   """
   def get_users_list do
-    query = from(u in User,
+    from(u in User,
       where: u.role_id in ["admin", "student", "teacher"],
       order_by: [desc: u.inserted_at],
-    )
-    Repo.all(query)
+    ) |> Repo.all()
   end
 
   @doc """
@@ -47,12 +45,29 @@ defmodule DApp.Query.Users do
     end
   end
 
+  @doc """
+  Gets
+  """
+  def get_user_by_role(role) do
+    query =
+      from(
+        u in User,
+        join: r in UserRole,
+        on: r.id == u.role_id,
+        where: u.role_id == ^role,
+        select: {u.first_name, r.id}
+      )
+      |> Repo.all()
+      |> IO.inspect(label: "customQuery =>")
+  end
 
   @doc """
   Gets a single user by email
   """
   def get_user_by_email(email) do
-    query = from(u in User, where: u.email == ^email)
+    query = EASY.Query.build(DApp.Schema.User, %{
+      "$where" => %{"email" => email}
+    })
     case Repo.one(query) do
       nil -> {:error, :user_does_not_exist}
       user -> {:ok, user}
@@ -112,7 +127,7 @@ end
       ** (Ecto.NoResultsError)
 
   """
-  def get_user_role!(id), do: Repo.get!(UserRole, id)
+#  def get_user_role!(id), do: Repo.get!(UserRole, id)
 
   @doc """
   Creates a user_role.

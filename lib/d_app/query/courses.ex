@@ -23,14 +23,9 @@ defmodule DApp.Query.Courses do
 #  end
 
   def get_programs_list do
-    EASY.Query.build(
-      DApp.Schema.Program,
-      %{
-        "$order" => %{
-          "inserted_at" => "$desc"
-        }
-      }
-    ) |> Repo.all
+    EASY.Query.build(DApp.Schema.Program, %{
+      "$order" => %{"inserted_at" => "$desc"}
+    }) |> Repo.all
   end
 
   @doc """

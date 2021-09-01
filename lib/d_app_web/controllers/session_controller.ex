@@ -7,22 +7,22 @@ defmodule DAppWeb.SessionController do
 
   def create_user(_, params, _) do
     new()
-    |> run(:email_taken, &is_email_taken/2, &abort/4)
-    |> run(:create_user, &create_user/2, &abort/4)
-    |> run(:updated_user, &put_token/2, &abort/4)
+    |> run(:email_taken, &is_email_taken/2, &abort/3)
+    |> run(:create_user, &create_user/2, &abort/3)
+    |> run(:updated_user, &put_token/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def signin(_, params, _) do
     new()
-    |> run(:authenticate, &authenticate/2, &abort/4)
-    |> run(:login_user, &put_token/2, &abort/4)
+    |> run(:authenticate, &authenticate/2, &abort/3)
+    |> run(:login_user, &put_token/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def get_user_from_jwt(_, params, _) do
     new()
-    |> run(:extracted_user, &extract_user/2, &abort/4)
+    |> run(:extracted_user, &extract_user/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
@@ -79,7 +79,7 @@ defmodule DAppWeb.SessionController do
     end
   end
 
-  defp abort(_, _, _, _) do
+  defp abort(_, _, _) do
     :abort
   end
 end

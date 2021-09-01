@@ -12,20 +12,20 @@ defmodule DAppWeb.AdminController do
 
   def create_program(_, params, _) do
     new()
-    |> run(:authenticate, &authenticate_program/2, &abort/4)
-    |> run(:create_program, &create_program/2, &abort/4)
+    |> run(:authenticate, &authenticate_program/2, &abort/3)
+    |> run(:create_program, &create_program/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def update_program(_, params, _) do
     new()
-    |> run(:update_program, &update_program/2, &abort/4)
+    |> run(:update_program, &update_program/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def delete_program(_, params, _) do
     new()
-    |> run(:delete_program, &delete_program/2, &abort/4)
+    |> run(:delete_program, &delete_program/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
@@ -59,7 +59,7 @@ defmodule DAppWeb.AdminController do
   """
   def get_semesters_by_program(_, params, _) do
     new()
-    |> run(:get_semesters_by_program, &get_semesters/2, &abort/4)
+    |> run(:get_semesters_by_program, &get_semesters/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
@@ -69,22 +69,22 @@ defmodule DAppWeb.AdminController do
 
   def create_semester(_, params, _) do
     new()
-    |> run(:authenticate, &authenticate_semester_create/2, &abort/4)
-    |> run(:create_semester, &create_semester/2, &abort/4)
+    |> run(:authenticate, &authenticate_semester_create/2, &abort/3)
+    |> run(:create_semester, &create_semester/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def update_semester(_, params, _) do
     new()
-    |> run(:authenticate, &authenticate_semester_update/2, &abort/4)
-    |> run(:update_semester, &update_semester/2, &abort/4)
+    |> run(:authenticate, &authenticate_semester_update/2, &abort/3)
+    |> run(:update_semester, &update_semester/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def delete_semester(_, params, _) do
     new()
-    |> run(:authenticate, &authenticate_semester_delete/2, &abort/4)
-    |> run(:delete_semester, &delete_semester/2, &abort/4)
+    |> run(:authenticate, &authenticate_semester_delete/2, &abort/3)
+    |> run(:delete_semester, &delete_semester/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
@@ -153,20 +153,20 @@ defmodule DAppWeb.AdminController do
 
   def create_course(_, params, _) do
     new()
-    |> run(:authenticate, &authenticate_course/2, &abort/4)
-    |> run(:create_course, &create_course/2, &abort/4)
+    |> run(:authenticate, &authenticate_course/2, &abort/3)
+    |> run(:create_course, &create_course/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def update_course(_, params, _) do
     new()
-    |> run(:update_course, &update_course/2, &abort/4)
+    |> run(:update_course, &update_course/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
   def delete_course(_, params, _) do
     new()
-    |> run(:delete_course, &delete_course/2, &abort/4)
+    |> run(:delete_course, &delete_course/2, &abort/3)
     |> transaction(DApp.Repo, params)
   end
 
@@ -207,7 +207,5 @@ defmodule DAppWeb.AdminController do
     end
   end
 
-  defp abort(_, _, _, _) do
-    :abort
-  end
+  defp abort(_, _, _), do: :abort
 end
